@@ -1,0 +1,18 @@
+{{#partial "content"}}
+
+hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+        {{#if departments}}
+            {{#each departments}}
+                <p>Name:{{descrptofdepartment}}</p>
+                <p>Description:{{nameofdepartment}}</p>
+               <p> Number Of employees:{{numberofemployees}}</p>
+
+
+
+            {{/each}}
+        {{/if}}
+  {{else}}
+    no dEPART!!!!
+{{/partial}}
+
+{{> layout.hbs}}

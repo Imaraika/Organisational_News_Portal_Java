@@ -1,0 +1,31 @@
+{{#partial "content"}}
+
+    <br>
+    <br>
+    <h1 style="text-align:center; font-weight:bolder;">Create a Department</h1>
+    <hr>
+
+    <form action="/departments/new" method="post">
+
+        <div class="form-group">
+            <label for="nameofdepartment">Department Name</label>
+            <input type="text" name="nameofdepartment" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="descrptofdepartment">Description</label>
+            <input type="text" name="descrptofdepartment" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+            <label for="numberofemployees">Number of employees</label>
+            <input type="number" id="numberofemployees" name="numberofemployees" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+
+    </form>
+
+{{/partial}}
+
+{{>layout.hbs}}
