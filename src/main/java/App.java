@@ -37,16 +37,16 @@ public class App {
         Sql2o sql2o = new Sql2o(connectionString, "wecode", "1234");
 
         userDao = new Sql2oUserDao(sql2o);
-        departmentDao= new Sql2oDepartmentDao(sql2o);
-        newsDao= new Sql2oNewsDao(sql2o);
+        departmentDao = new Sql2oDepartmentDao(sql2o);
+        newsDao = new Sql2oNewsDao(sql2o);
 
 //get the first page
-        get("/", (req, resp)->{
+        get("/", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
             return new ModelAndView(model, "index.hbs");
         }, new HandlebarsTemplateEngine());
 
-        get("/success", (req, resp)->{
+        get("/success", (req, resp) -> {
             Map<String, Object> model = new HashMap<>();
             return new ModelAndView(model, "success.hbs");
         }, new HandlebarsTemplateEngine());
@@ -61,9 +61,9 @@ public class App {
             Map<String, Object> model = new HashMap<>();
             String name = req.queryParams("nameofdepartment");
             String description = req.queryParams("descrptofdepartment");
-            String numberofemployees= req.queryParams("numberofemployees");
-            Department newDepartment = new Department(name,description, numberofemployees);
-            model.put("newDepartment",newDepartment);
+            String numberofemployees = req.queryParams("numberofemployees");
+            Department newDepartment = new Department(name, description, numberofemployees);
+            model.put("newDepartment", newDepartment);
             newDepartment.save();
             res.redirect("/success");
             return new ModelAndView(model, "success.hbs");
@@ -71,14 +71,16 @@ public class App {
 
         get("/new", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            List<Department>departments = Sql2oDepartmentDao.getAll();
-               model.put("departments",departments);
+            List<Department> departments = Sql2oDepartmentDao.getAll();
+            model.put("departments", departments);
             return new ModelAndView(model, "News.hbs");
         }, new HandlebarsTemplateEngine());
         //get: show a form to create a new user
 
         get("/users/new", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
+            List<Department> departments = Sql2oDepartmentDao.getAll();
+            model.put("departments", departments);
             return new ModelAndView(model, "employees-form.hbs");
         }, new HandlebarsTemplateEngine());
 
@@ -86,9 +88,11 @@ public class App {
             Map<String, Object> model = new HashMap<>();
             String name = req.queryParams("name");
             String position = req.queryParams("position");
-            String role= req.queryParams("role");
-            User newUser = new User(name,position, role);
-            model.put("newUser",newUser);
+            String role = req.queryParams("role");
+            String iddept = req.queryParams("iddept");
+
+            User newUser = new User(name, position, role,iddept);
+            model.put("newUser", newUser);
             newUser.save();
             res.redirect("/success");
             return new ModelAndView(model, "success.hbs");
@@ -96,8 +100,8 @@ public class App {
 
         get("/newEmp", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            List<User>users = Sql2oUserDao.getAll();
-            model.put("departments",users);
+            List<User> users = Sql2oUserDao.getAll();
+            model.put("departments", users);
             return new ModelAndView(model, "DataFromDatabase.hbs");
         }, new HandlebarsTemplateEngine());
 
@@ -110,9 +114,9 @@ public class App {
             Map<String, Object> model = new HashMap<>();
             String newstitle = req.queryParams("newstitle");
             String content = req.queryParams("content");
-            int iddept= Integer.parseInt(req.queryParams("iddept"));
-            News newDepartment = new News(newstitle,content, iddept);
-            model.put("newDepartment",newDepartment);
+            int iddept = Integer.parseInt(req.queryParams("iddept"));
+            News newDepartment = new News(newstitle, content, iddept);
+            model.put("newDepartment", newDepartment);
             newDepartment.save();
             res.redirect("/success");
             return new ModelAndView(model, "success.hbs");
@@ -120,80 +124,9 @@ public class App {
 
         get("/new", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            List<News>departments = Sql2oNewsDao.getAll();
-            model.put("departments",departments);
+            List<News> departments = Sql2oNewsDao.getAll();
+            model.put("departments", departments);
             return new ModelAndView(model, "NewsfromDB.hbs");
         }, new HandlebarsTemplateEngine());
-
-        //get: show a form to create a new user
-      /*  get("/users/new", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("allDepartments",departmentDao.getAll());
-            List<User>users = User.getAll();
-            model.put("departments", departments);
-            model.put("users",users);
-            return new ModelAndView(model, "user-form.hbs");
-        }, new HandlebarsTemplateEngine());
-
-        //get: show a form to create a new news
-        get("/news/new", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            List<Department> departments = Department.all();
-            List<New> news = New.all();
-            model.put("departments", departments);
-            model.put("news", news);
-            return new ModelAndView(model, "news-form.hbs");
-        }, new HandlebarsTemplateEngine());
-
-        //post: process a form to create a new department
-        post("/success1", (req, res) -> { //new
-            Map<String, Object> model = new HashMap<>();
-            String name = req.queryParams("name");
-            String description = req.queryParams("description");
-            int numberOfEmployees = Integer.parseInt(req.queryParams("numberOfEmployees"));
-            Department newDepartment = new Department(name,description, numberOfEmployees);
-            newDepartment.save();
-            System.out.println(newDepartment);
-            return new ModelAndView(model, "success.hbs");
-        }, new HandlebarsTemplateEngine());
-
-        //post: process a form to create a new user
-        post("/success", (req, res) -> { //new
-            Map<String, Object> model = new HashMap<>();
-            String name = req.queryParams("name");
-            String position = req.queryParams("position");
-            String role = req.queryParams("role");
-            int departmentId= Integer.parseInt(req.queryParams("departmentId"));
-            User newUser = new User(name,position, role, departmentId);
-            newUser.save();
-            System.out.println(newUser);
-            res.redirect("/success");
-            return new ModelAndView(model, "success.hbs");
-        }, new HandlebarsTemplateEngine());
-
-        //post: process a form to create a new news
-        post("/success2", (req, res) -> { //new
-            Map<String, Object> model = new HashMap<>();
-            String title = req.queryParams("title");
-            String body = req.queryParams("body");
-            int departmentId= Integer.parseInt(req.queryParams("departmentId"));
-            New newNews = new New(title,body, departmentId);
-            newNews.save();
-            System.out.println(newNews);
-            return new ModelAndView(model, "success.hbs");
-        }, new HandlebarsTemplateEngine());
-
-        //
-        //get: delete a department by id
-        get("/departments/:id/delete", (req, res) -> {
-            Map<String, Object> model = new HashMap<>();
-            model.put("deleteDepartment", true);
-            int depId = Integer.parseInt("int");
-//            int idToDelete= Department.findById(depId);
-//            Department department= Department.deletebyId(idToDelete);
-            return new ModelAndView(model, "department-form.hbs");
-        }, new HandlebarsTemplateEngine());
-*/
     }
-
 }
