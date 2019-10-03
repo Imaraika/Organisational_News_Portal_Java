@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sql2oUserDao implements UserDao { //don't forget to shake hands with your interface!
-    private final Sql2o sql2o;
+    private static Sql2o sql2o;
     public Sql2oUserDao(Sql2o sql2o){ this.sql2o = sql2o; }
 
     @Override
@@ -28,7 +28,7 @@ public class Sql2oUserDao implements UserDao { //don't forget to shake hands wit
     }
 
 
-    public List<User> getAll() {
+    public static List<User> getAll() {
         try(Connection con = sql2o.open()){
             return con.createQuery("SELECT * FROM users")
                     .executeAndFetch(User.class);

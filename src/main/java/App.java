@@ -96,8 +96,8 @@ public class App {
 
         get("/newEmp", (req, res) -> {
             Map<String, Object> model = new HashMap<String, Object>();
-            List<Department>departments = Sql2oDepartmentDao.getAll();
-            model.put("departments",departments);
+            List<User>users = Sql2oUserDao.getAll();
+            model.put("departments",users);
             return new ModelAndView(model, "DataFromDatabase.hbs");
         }, new HandlebarsTemplateEngine());
 
