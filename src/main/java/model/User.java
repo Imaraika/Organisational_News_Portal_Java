@@ -1,5 +1,7 @@
 package model;
 
+import org.sql2o.Connection;
+
 import java.util.Objects;
 
 public class User {
@@ -57,6 +59,17 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(name,position,role,id);
+    }
+    public void save() {
+        try(Connection con = model.DB.sql2o.open()) {
+            String sql = "INSERT INTO users (name, position, role) VALUES (:name, :position, :role)";
+            this.id = (int) con.createQuery(sql, true)
+                    .addParameter("name", this.name)
+                    .addParameter("position", this.position)
+                    .addParameter("role", this.role)
+                    .executeUpdate()
+                    .getKey();
+        }
     }
 }
 
