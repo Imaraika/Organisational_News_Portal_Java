@@ -1,25 +1,35 @@
 package model;
 
+import org.sql2o.Connection;
+
 import java.util.Objects;
 
 public class News {
-    private String header;
-    private String contents;
+    private String newstitle;
+    private String content;
     private int id;
-    private int deptId;
+    private int iddept;
 
-    public News(String header,String contents, int deptId) {
-        this.header=header;
-        this.contents = contents;
-        this.deptId = deptId;
+    public News(String newstitle,String content, int iddept) {
+        this.newstitle=newstitle;
+        this.content = content;
+        this.iddept = iddept;
     }
 
-    public String getContents() {
-        return contents;
+    public String getNewstitle() {
+        return newstitle;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
+    public void setNewstitle(String newstitle) {
+        this.newstitle = newstitle;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String contents) {
+        this.content = contents;
     }
 
     public int getId() {
@@ -31,15 +41,7 @@ public class News {
     }
 
     public int getDeptId() {
-        return deptId;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public void setDeptId(int deptId) {
-        this.deptId = deptId;
+        return iddept;
     }
 
     @Override
@@ -48,13 +50,24 @@ public class News {
         if (!(o instanceof News) )return false;
         News news = (News) o;
         return id == news.id &&
-                deptId == news.deptId &&
-                Objects.equals(contents, news.contents);
+                iddept == news.iddept &&
+                Objects.equals(content, news.content);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contents, id, deptId);
+        return Objects.hash(content, id, iddept);
+    }
+    public void save() {
+        try(Connection con = model.DB.sql2o.open()) {
+            String sql = "INSERT INTO departments (newstitle, content, iddept) VALUES (:nameofdepartment, :descrptofdepartment, :numberofemployees)";
+            this.id = (int) con.createQuery(sql, true)
+                    .addParameter("nameofdepartment", this.newstitle)
+                    .addParameter("descrptofdepartment", this.content)
+                    .addParameter("numberofemployees", this.iddept)
+                    .executeUpdate()
+                    .getKey();
+        }
     }
 
 

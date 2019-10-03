@@ -8,7 +8,7 @@ import org.sql2o.Sql2oException;
 import java.util.List;
 
 public class Sql2oNewsDao  implements NewsDao {
-    private final Sql2o sql2o;
+    private static Sql2o sql2o;
     public Sql2oNewsDao(Sql2o sql2o){
         this.sql2o=sql2o;
     }
@@ -27,8 +27,7 @@ public class Sql2oNewsDao  implements NewsDao {
         }
     }
 
-    @Override
-    public List<News> getAll() {
+    public static List<News> getAll() {
         try (Connection con = sql2o.open()) {
             return con.createQuery("SELECT * FROM news")
                     .executeAndFetch(News.class);

@@ -101,6 +101,30 @@ public class App {
             return new ModelAndView(model, "DataFromDatabase.hbs");
         }, new HandlebarsTemplateEngine());
 
+        get("/News/new", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            return new ModelAndView(model, "News-form.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        post("/News/new", (req, res) -> { //new
+            Map<String, Object> model = new HashMap<>();
+            String newstitle = req.queryParams("newstitle");
+            String content = req.queryParams("content");
+            int iddept= Integer.parseInt(req.queryParams("iddept"));
+            News newDepartment = new News(newstitle,content, iddept);
+            model.put("newDepartment",newDepartment);
+            newDepartment.save();
+            res.redirect("/success");
+            return new ModelAndView(model, "success.hbs");
+        }, new HandlebarsTemplateEngine());
+
+        get("/new", (req, res) -> {
+            Map<String, Object> model = new HashMap<String, Object>();
+            List<News>departments = Sql2oNewsDao.getAll();
+            model.put("departments",departments);
+            return new ModelAndView(model, "NewsfromDB.hbs");
+        }, new HandlebarsTemplateEngine());
+
         //get: show a form to create a new user
       /*  get("/users/new", (req, res) -> {
             Map<String, Object> model = new HashMap<>();
